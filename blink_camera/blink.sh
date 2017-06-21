@@ -4,6 +4,20 @@
 BLINKKEYSTORE=".blink"
 URL="prod.immedia-semi.com"
 
+prereq () {
+	if ! [ -x "$(command -v jq)" ]; then
+		clear
+		echo
+		echo "Error: jq package not detected..."
+		echo
+		echo "     Please install the jq package for your system:"
+		echo "           https://stedolan.github.io/jq/ " 
+		echo
+		exit
+	fi
+}
+prereq
+
 if [ ! -d ~/${BLINKKEYSTORE} ]; then
 	mkdir ~/${BLINKKEYSTORE}
 	echo null > ~/${BLINKKEYSTORE}/authcode
