@@ -1,8 +1,10 @@
 #!/bin/bash
 
 #Folder in ~ for Blink auth/cred files to be saved
-URL="prod.immedia-semi.com"
 BLINKDIR=".blink"
+#API endpoint
+URL="prod.immedia-semi.com"
+#Output directory for videos
 OUTPUTDIR="."
 
 preReq () {
