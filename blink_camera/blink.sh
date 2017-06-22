@@ -70,15 +70,10 @@ elif [ "$1" == "unwatchedvideos" ]; then
 	exit
 elif [ "$1" == "allvideos" ]; then
 	for ADDRESS in $( curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/events/network/${NETWORKID} | jq '.' | grep video_url | cut -d \" -f4 ); do
-    NAME=$(awk -F/ '{print $NF}' <<< ${ADDRESS})
-    curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/${ADDRESS} > ${OUTPUTDIR}/${NAME}
+	    NAME=$(awk -F/ '{print $NF}' <<< ${ADDRESS})
+	    curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/${ADDRESS} > ${OUTPUTDIR}/${NAME}
 	done
 	exit
 else
 	helpMe
 fi
-
-
-
-
-
