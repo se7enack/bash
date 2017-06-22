@@ -21,7 +21,7 @@ preReq () {
 }
 
 helpMe () {
-	echo Options are currently limited to: { cameras, unwatched, homescreen, events, unwatchedvideos, allvideos }
+	echo Options are currently limited to: { cameras, unwatched, homescreen, events, newvideos, allvideos }
 }
 
 credGet () {
@@ -64,7 +64,7 @@ elif [ "$1" == "homescreen" ]; then
 elif [ "$1" == "events" ]; then
 	curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/events/network/${NETWORKID} | jq -C
 	exit
-elif [ "$1" == "unwatchedvideos" ]; then
+elif [ "$1" == "newvideos" ]; then
 	for ADDRESS in $( curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/api/v2/videos/unwatched | jq '.' | grep address | cut -d \" -f4 ); do
     NAME=$(awk -F/ '{print $NF}' <<< ${ADDRESS})
     curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/${ADDRESS} > ${OUTPUTDIR}/${NAME}
