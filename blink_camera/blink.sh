@@ -3,6 +3,7 @@
 #Folder in ~ for Blink auth/cred files to be saved
 URL="prod.immedia-semi.com"
 BLINKDIR=".blink"
+OUTPUTDIR="."
 
 preReq () {
 	if ! [ -x "$(command -v jq)" ]; then
@@ -18,7 +19,7 @@ preReq () {
 }
 
 helpMe () {
-	echo Options are currently limited to: { cameras, unwatched }
+	echo Options are currently limited to: { cameras, unwatched, homescreen, events, unwatchedvideos, allvideos }
 }
 
 credGet () {
@@ -53,9 +54,31 @@ if [ "$1" == "cameras" ]; then
 	curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/network/${NETWORKID}/cameras | jq -C 
 	exit
 elif [ "$1" == "unwatched" ]; then
-	curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/api/v2/videos/unwatched | jq -C 
+	curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/api/v2/videos/unwatched  | jq -C
+	exit
+elif [ "$1" == "homescreen" ]; then
+	curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/homescreen | jq -C
+	exit
+elif [ "$1" == "events" ]; then
+	curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/events/network/${NETWORKID} | jq -C
+	exit
+elif [ "$1" == "unwatchedvideos" ]; then
+	for ADDRESS in $( curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/api/v2/videos/unwatched | jq '.' | grep address | cut -d \" -f4 ); do
+    NAME=$(awk -F/ '{print $NF}' <<< ${ADDRESS})
+    curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/${ADDRESS} > ${OUTPUTDIR}/${NAME}
+	done
+	exit
+elif [ "$1" == "allvideos" ]; then
+	for ADDRESS in $( curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/events/network/${NETWORKID} | jq '.' | grep video_url | cut -d \" -f4 ); do
+    NAME=$(awk -F/ '{print $NF}' <<< ${ADDRESS})
+    curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/${ADDRESS} > ${OUTPUTDIR}/${NAME}
+	done
 	exit
 else
 	helpMe
 fi
+
+
+
+
 
