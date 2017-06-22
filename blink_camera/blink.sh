@@ -5,7 +5,7 @@ BLINKDIR=".blink"
 #API endpoint
 URL="prod.immedia-semi.com"
 #Output directory for videos
-OUTPUTDIR="."
+OUTPUTDIR="/tmp"
 
 preReq () {
 	if ! [ -x "$(command -v jq)" ]; then
@@ -80,8 +80,9 @@ elif [ "$1" == "allvideos" ]; then
         echo "Downloading ${NAME}"
 	    curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/${ADDRESS} > ${OUTPUTDIR}/${NAME}
 	done
-    echo
+    echo "Download complete. Your videos can be found here: ${OUTPUTDIR}"
 	exit
 else
 	helpMe
 fi
+
