@@ -71,10 +71,16 @@ elif [ "$1" == "newvideos" ]; then
 	done
 	exit
 elif [ "$1" == "allvideos" ]; then
+    clear
+    echo
+    echo "Please wait..."
+    echo
 	for ADDRESS in $( curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/events/network/${NETWORKID} | jq '.' | grep video_url | cut -d \" -f4 ); do
 	    NAME=$(awk -F/ '{print $NF}' <<< ${ADDRESS})
+        echo "Downloading ${NAME}"
 	    curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/${ADDRESS} > ${OUTPUTDIR}/${NAME}
 	done
+    echo
 	exit
 else
 	helpMe
