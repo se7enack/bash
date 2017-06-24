@@ -65,7 +65,7 @@ theMenu () {
     do
         case $opt in
             "Download all videos")
-                echo "Download all videos"
+                echo;echo "Download all videos"
                 for ADDRESS in $( curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/events/network/${NETWORKID} | jq '.' | grep video_url | cut -d \" -f4 ); do
                     NAME=$(awk -F/ '{print $NF}' <<< ${ADDRESS})
                     echo "Downloading ${NAME}"
@@ -76,35 +76,35 @@ theMenu () {
                 exit
                 ;;
             "Get network information")
-                echo "Get network information"
+                echo;echo "Get network information"
                 CALL="/networks"
                 SWITCH=""
                 JQ=true
                 break
                 ;;
             "Get Sync Module information")
-                echo "Get Sync Module information"
+                echo;echo "Get Sync Module information"
                 CALL="/network/${NETWORKID}/syncmodules"
                 SWITCH=""
                 JQ=true
                 break
                 ;;
             "Arm network")
-                echo "Arm network ${NETWORKID}"
+                echo;echo "Arm network ${NETWORKID}"
                 CALL="/network/${NETWORKID}/arm"
                 SWITCH="--data-binary"
                 JQ=true
                 break
                 ;;
             "Disarm network")
-                echo "Disarm network ${NETWORKID}"
+                echo;echo "Disarm network ${NETWORKID}"
                 CALL="/network/${NETWORKID}/disarm"
                 SWITCH="--data-binary"
                 JQ=true
                 break
                 ;;
             "Get status")
-                echo "Please enter the command (Options: lv_relay, arm, disarm, thumbnail, clip):"
+                echo;echo "Please enter the command (Options: lv_relay, arm, disarm, thumbnail, clip):"
                 read COMMANDID
                 echo "Get status for command ${COMMANDID}"
                 CALL="/network/${NETWORKID}/command/${COMMANDID}"
@@ -113,21 +113,22 @@ theMenu () {
                 break
                 ;;
             "Get homescreen information")
-                echo "Get homescreen information"
+                echo;echo "Get homescreen information"
                 CALL="/homescreen"
                 SWITCH=""
                 JQ=true
                 break
                 ;;
             "Get events for network")
-                echo "Get events for network ${NETWORKID}"
+                echo;echo "Get events for network ${NETWORKID}"
                 CALL="/events/network/${NETWORKID}"
                 SWITCH=""
                 JQ=true
                 break
                 ;;
             "Capture a new thumbnail")
-                echo "Please enter the CAMERAID:"
+                curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/network/${NETWORKID}/cameras | jq '.' | grep -E '"name"|"id"'
+                echo "Please enter the camera's ID number:"
                 read CAMERAID
                 echo "Capture a new thumbnail from camera ${CAMERAID}"
                 CALL="/network/${NETWORKID}/camera/${CAMERAID}/thumbnail"
@@ -136,7 +137,8 @@ theMenu () {
                 break
                 ;;
             "Capture a new video")
-                echo "Please enter the CAMERAID:"
+                curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/network/${NETWORKID}/cameras | jq '.' | grep -E '"name"|"id"'
+                echo "Please enter the camera's ID number:"
                 read CAMERAID
                 echo "Capture a new video from camera ${CAMERAID}"
                 CALL="/network/${NETWORKID}/camera/${CAMERAID}/clip"
@@ -145,21 +147,22 @@ theMenu () {
                 break
                 ;;
             "Get a total on the number of videos")
-                echo "Get a total on the number of videos"
+                echo;echo "Get a total on the number of videos"
                 CALL="/api/v2/videos/count"
                 SWITCH=""
                 JQ=true
                 break
                 ;;
             "Get paginated video information")
-                echo "Get paginated video information"
+                echo;echo "Get paginated video information"
                 CALL="/api/v2/videos/page/0"
                 SWITCH=""
                 JQ=true
                 break
                 ;;
             "Get video information")
-                echo "Please enter the VIDEOID:"
+                curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/events/network/${NETWORKID} | jq '.' #| grep -E '"name"|"video_id'
+                echo;echo "Please enter the VIDEOID:"
                 read VIDEOID
                 echo "Get information on video ${VIDEOID}"
                 CALL="/api/v2/video/${VIDEOID}"
@@ -168,14 +171,14 @@ theMenu () {
                 break
                 ;;
             "Unwatched video list")
-                echo "Get a list of unwatched videos"
+                echo;echo "Get a list of unwatched videos"
                 CALL="/api/v2/videos/unwatched"
                 SWITCH=""
                 JQ=true
                 break
                 ;;
             "Delete a video")
-                echo "Please enter the VIDEOID:"
+                echo;echo "Please enter the VIDEOID:"
                 read VIDEOID
                 echo "Delete video ${VIDEOID}"
                 CALL="/api/v2/video/${VIDEOID}/delete"
@@ -184,21 +187,22 @@ theMenu () {
                 break
                 ;;
             "Delete all videos")
-                echo "Delete all videos"
+                echo;echo "Delete all videos"
                 CALL="/api/v2/videos/deleteall"
                 SWITCH="--data-binary"
                 JQ=true
                 break
                 ;;
             "Get a list of all cameras")
-                echo "Get a list of all cameras"
+                echo;echo "Get a list of all cameras"
                 CALL="/network/${NETWORKID}/cameras"
                 SWITCH=""
                 JQ=true
                 break
                 ;;
             "Get camera information")
-                echo "Please enter the CAMERAID:"
+                curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/network/${NETWORKID}/cameras | jq '.' | grep -E '"name"|"id"'
+                echo "Please enter the camera's ID number:"
                 read CAMERAID
                 echo "Get information for camera ${CAMERAID}"
                 CALL="/network/${NETWORKID}/camera/${CAMERAID}"
@@ -207,7 +211,8 @@ theMenu () {
                 break
                 ;;
             "Get camera sensor information")
-                echo "Please enter the CAMERAID:"
+                curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/network/${NETWORKID}/cameras | jq '.' | grep -E '"name"|"id"'
+                echo "Please enter the camera's ID number:"
                 read CAMERAID
                 echo "Get camera sensor information for camera ${CAMERAID}"
                 CALL="/network/${NETWORKID}/camera/${CAMERAID}/signals"
@@ -216,7 +221,8 @@ theMenu () {
                 break
                 ;;
             "Enable motion detection")
-                echo "Please enter the CAMERAID:"
+                curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/network/${NETWORKID}/cameras | jq '.' | grep -E '"name"|"id"'
+                echo "Please enter the camera's ID number:"
                 read CAMERAID
                 echo "Enable motion detection for camera ${CAMERAID}"
                 CALL="/network/${NETWORKID}/camera/${CAMERAID}/enable"
@@ -225,7 +231,8 @@ theMenu () {
                 break
                 ;;
             "Disable motion detection")
-                echo "Please enter the CAMERAID:"
+                curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/network/${NETWORKID}/cameras | jq '.' | grep -E '"name"|"id"'
+                echo "Please enter the camera's ID number:"
                 read CAMERAID
                 echo "Disable motion detection for camera ${CAMERAID}"
                 CALL="/network/${NETWORKID}/camera/${CAMERAID}/disable"
@@ -234,28 +241,28 @@ theMenu () {
                 break
                 ;;
             "Get information about connected devices")
-                echo "Get information about connected devices"
+                echo;echo "Get information about connected devices"
                 CALL="/account/clients"
                 SWITCH=""
                 JQ=true
                 break
                 ;;
             "Get information about supported regions")
-                echo "Get information about supported regions"
+                echo;echo "Get information about supported regions"
                 CALL="/regions"
                 SWITCH=""
                 JQ=true
                 break
                 ;;
             "Get information about system health")
-                echo "Get information about system health"
+                echo;echo "Get information about system health"
                 CALL="/health"
                 SWITCH=""
-                JQ=true
+                JQ=false
                 break
                 ;;
             "Get information about programs")
-                echo "Get information about programs"
+                echo;echo "Get information about programs"
                 CALL="/api/v1/networks/${NETWORKID}/programs"
                 SWITCH=""
                 JQ=true
@@ -271,7 +278,6 @@ theMenu () {
 
 clear;preReq;credGet;theMenu
 
-
 if [ ${JQ} == true ]; then
     clear
     echo
@@ -280,7 +286,7 @@ if [ ${JQ} == true ]; then
     echo
 else 
     clear
-    echo no jq
+    echo
     curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" ${SWITCH} --compressed https://${URL}${CALL}
     echo
     echo
