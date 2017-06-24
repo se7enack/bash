@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Folder in ~ for Blink auth/cred files to be saved
-BLINKDIR=".blink"
+BLINKDIR=".blink2"
 #API endpoint
 URL="prod.immedia-semi.com"
 #Output directory for videos
@@ -25,30 +25,30 @@ helpMe () {
 }
 
 credGet () {
-    if [ ! -d ~/${BLINKDIR} ]; then
-        mkdir ~/${BLINKDIR}
-        echo null > ~/${BLINKDIR}/authcode
-        echo Enter your username \(email\):
-        read EMAIL
-        echo ${EMAIL} > ~/${BLINKDIR}/creds
-        echo
-        echo Enter your password:
-        read PASSWORD
-        echo ${PASSWORD} >> ~/${BLINKDIR}/creds
-    fi
-    EMAIL=$(sed -n '1p' ~/${BLINKDIR}/creds)
-    PASSWORD=$(sed -n '2p' ~/${BLINKDIR}/creds)
-    AUTHCODE=$(cat ~/${BLINKDIR}/authcode)
-    AUTHTEST=$(curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/homescreen | grep -o '\"message\":\".\{0,12\}' | cut -c12-)
-    if [ "${AUTHTEST}" == "Unauthorized" ]; then 
-        curl -s -H "Host: ${URL}" -H "Content-Type: application/json" '{ "password" : "'"${PASSWORD}"'", "client_specifier" : "iPhone 9.2 | 2.2 | 222", "email" : "'"${EMAIL}"'" }' --compressed https://${URL}/login | grep -o '\"authtoken\":\".\{0,22\}' | cut -c14-  > ~/${BLINKDIR}/authcode
-        AUTHCODE=$(cat ~/${BLINKDIR}/authcode)
-    if [ "${AUTHCODE}" == "" ]; then
-        echo "No Authcode received, please check credentials"
-        exit
-    fi
-    fi
-    NETWORKID=$(curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/networks | grep -o '\"summary\":{\".\{0,6\}' | cut -c13-)
+	if [ ! -d ~/${BLINKDIR} ]; then
+		mkdir ~/${BLINKDIR}
+		echo null > ~/${BLINKDIR}/authcode
+		echo Enter your username \(email\):
+		read EMAIL
+		echo ${EMAIL} > ~/${BLINKDIR}/creds
+		echo
+		echo Enter your password:
+		read PASSWORD
+		echo ${PASSWORD} >> ~/${BLINKDIR}/creds
+	fi
+	EMAIL=$(sed -n '1p' ~/${BLINKDIR}/creds)
+	PASSWORD=$(sed -n '2p' ~/${BLINKDIR}/creds)
+	AUTHCODE=$(cat ~/${BLINKDIR}/authcode)
+	AUTHTEST=$(curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/homescreen | grep -o '\"message\":\".\{0,12\}' | cut -c12-)
+	if [ "${AUTHTEST}" == "Unauthorized" ]; then 
+		curl -s -H "Host: ${URL}" -H "Content-Type: application/json" --data-binary '{ "password" : "'"${PASSWORD}"'", "client_specifier" : "iPhone 9.2 | 2.2 | 222", "email" : "'"${EMAIL}"'" }' --compressed https://${URL}/login | grep -o '\"authtoken\":\".\{0,22\}' | cut -c14-  > ~/${BLINKDIR}/authcode
+		AUTHCODE=$(cat ~/${BLINKDIR}/authcode)
+	if [ "${AUTHCODE}" == "" ]; then
+		echo "No Authcode received, please check credentials"
+		exit
+	fi
+	fi
+	NETWORKID=$(curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/networks | grep -o '\"summary\":{\".\{0,6\}' | cut -c13-)
 }
 
 theMenu () {
