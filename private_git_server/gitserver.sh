@@ -42,11 +42,12 @@ echo "$(which git-shell)" >> /etc/shells && \
 chsh git -s $(which git-shell)
 
 if [[ $? -eq 0 ]]; then
-  clear
   echo
   echo "Complete!"
   echo 
   echo "From your local machine run:"
   echo "git clone git@${SERVERIP}:/srv/${REPO}.git"
   echo
+else
+  echo "ERROR: Review above output for more information"
 fi
