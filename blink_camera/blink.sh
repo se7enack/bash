@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Folder in ~ for Blink auth/cred files to be saved
-BLINKDIR=".blink2"
+BLINKDIR="link"
 #API endpoint
 URL="prod.immedia-semi.com"
 #Output directory for videos
