@@ -2,7 +2,8 @@
 
 # To install, copy this file into /usr/bin/
 
-if [ -z ${1+x} ]; then
+echo ${1} | grep @ &> /dev/null
+if [[ $? -ne 0 || -z ${1+x} ]]; then
 	echo
 	echo "ERROR: Expected a {USERNAME}@{SERVER}"
 	echo
@@ -10,6 +11,7 @@ if [ -z ${1+x} ]; then
 	echo
 	exit
 fi
+
 IP=$(echo $1 | awk -F'@' '{print $NF}')
 nc -z -w 5 ${IP} 22 &> /dev/null
 if [ $? -eq 0 ]; then
