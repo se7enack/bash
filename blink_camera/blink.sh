@@ -5,7 +5,7 @@ BLINKDIR=".blink2"
 #API endpoint
 URL="prod.immedia-semi.com"
 #Output directory for videos
-OUTPUTDIR="/Users/sburke/Desktop"
+OUTPUTDIR="/Users/sburke/Desktop/blink"
 
 preReq () {
     if ! [ -x "$(command -v jq)" ]; then
@@ -67,15 +67,12 @@ theMenu () {
             "Download all videos")
                 echo;echo "Download all videos"
                 COUNT=$(curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}//api/v2/videos/count | sed -n 's/\"count"\://p' | tr -d '{}')
-                echo $COUNT
-                COUNT=$((${COUNT} / 10))
-                echo $COUNT
-                rm .sjb &> /dev/null
-                touch .sjb
+                COUNT=$(((${COUNT} / 10)+1))
+                rm .sjb* &> /dev/null
                 for ((n=0;n<${COUNT};n++)); do
-                    curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}//api/v2/videos/page/${n} | sed 's/"/ /g' | sed "s/regexp/\\`echo -e '\n\r'`/g" | tr ' ' '\n' | grep -e mp4 &> .sjb
+                    curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}//api/v2/videos/page/${n} | sed 's/"/ /g' | sed "s/regexp/\\`echo -e '\n\r'`/g" | tr ' ' '\n' | grep -e mp4 &> .sjb${n}
                 done
-                for ADDRESS in $( cat .sjb ); do
+                for ADDRESS in $( cat .sjb* ); do
                     echo "Downloading ${ADDRESS} to ${OUTPUTDIR}"
                     ADDRESS2=$( echo $ADDRESS | sed 's:.*/::' )
                     curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/${ADDRESS} > ${OUTPUTDIR}/${ADDRESS2}
