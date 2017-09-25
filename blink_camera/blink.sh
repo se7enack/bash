@@ -1,7 +1,7 @@
 #!/bin/bash
 
 #Folder in ~ for Blink auth/cred files to be saved
-BLINKDIR="link"
+BLINKDIR=".blink2"
 #API endpoint
 URL="prod.immedia-semi.com"
 #Output directory for videos
@@ -66,12 +66,21 @@ theMenu () {
         case $opt in
             "Download all videos")
                 echo;echo "Download all videos"
-                for ADDRESS in $( curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/events/network/${NETWORKID} | jq '.' | grep video_url | cut -d \" -f4 ); do
-                    NAME=$(awk -F/ '{print $NF}' <<< ${ADDRESS})
-                    echo "Downloading ${NAME}"
-                    curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/${ADDRESS} > ${OUTPUTDIR}/${NAME}
+                COUNT=$(curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}//api/v2/videos/count | sed -n 's/\"count"\://p' | tr -d '{}')
+                echo $COUNT
+                COUNT=$((${COUNT} / 10))
+                echo $COUNT
+                rm .sjb &> /dev/null
+                touch .sjb
+                for ((n=0;n<${COUNT};n++)); do
+                    curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}//api/v2/videos/page/${n} | sed 's/"/ /g' | sed "s/regexp/\\`echo -e '\n\r'`/g" | tr ' ' '\n' | grep -e mp4 &> .sjb
                 done
-                echo
+                for ADDRESS in $( cat .sjb ); do
+                    echo "Downloading ${ADDRESS} to ${OUTPUTDIR}"
+                    ADDRESS2=$( echo $ADDRESS | sed 's:.*/::' )
+                    curl -s -H "Host: ${URL}" -H "TOKEN_AUTH: ${AUTHCODE}" --compressed https://${URL}/${ADDRESS} > ${OUTPUTDIR}/${ADDRESS2}
+                done
+                
                 echo "Download complete. Your videos can be found here: ${OUTPUTDIR}"
                 exit
                 ;;
