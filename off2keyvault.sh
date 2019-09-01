@@ -1,4 +1,3 @@
-  
 #!/bin/bash
 # This will create a keyvault in Azure and populate it with your key value pairs from a file.
 # Usage: ./off2keyvault.sh mykeyvaluepairs.properties 
