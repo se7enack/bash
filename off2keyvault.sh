@@ -2,21 +2,10 @@
 # This will create a keyvault in Azure and populate it with your key value pairs from a file.
 # Usage: ./off2keyvault.sh mykeyvaluepairs.properties 
 
-propertiesfile=${1}
 subscriptionid="PUT_YOUR_AZURE_SUBSCRIPTION_ID_HERE"
 location="eastus2"
 keyvaultname="foobar"
 
-which -s pwsh
-if [ $? -ne 0 ]
-then
-    echo
-    echo "Powershell is required to use this tool. Please install it and try again."
-    echo "             https://github.com/PowerShell/PowerShell"
-    exit
-fi
-
-pscmd=$(which pwsh)
 mkdir -p ps1
 echo "Set-AzContext -Subscription ${subscriptionid}" > ./ps1/${keyvaultname}.ps1
 echo "New-AzureRmKeyVault -VaultName ${keyvaultname} -ResourceGroupName ${resourcegroupname} -Location ${location}" >> ./ps1/${keyvaultname}.ps1
@@ -30,6 +19,4 @@ do
   echo "$"${key} " = ConvertTo-SecureString -String " ${value} " -AsPlainText -Force" >> ./ps1/${keyvaultname}.ps1
   echo "Set-AzureKeyVaultSecret -VaultName "${keyvaultname}" -Name "${keyfix}" -SecretValue $"${key} >> ./ps1/${keyvaultname}.ps1
   echo
-done < "${propertiesfile}"
-
-${pscmd} ./ps1/${keyvaultname}.ps1
+done < "${1}"
