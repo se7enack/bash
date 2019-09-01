@@ -7,8 +7,17 @@ propertiesfile=${1}
 subscriptionid="PUT_YOUR_AZURE_SUBSCRIPTION_ID_HERE"
 location="eastus2"
 keyvaultname="foobar"
-pscmd=$(which pwsh)
 
+which -s pwsh
+if [ $? -ne 0 ]
+then
+    echo
+    echo "Powershell is required to use this tool. Please install it and try again."
+    echo "             https://github.com/PowerShell/PowerShell"
+    exit
+fi
+
+pscmd=$(which pwsh)
 mkdir -p ps1
 echo "Set-AzContext -Subscription ${subscriptionid}" > ./ps1/${keyvaultname}.ps1
 echo "New-AzureRmKeyVault -VaultName ${keyvaultname} -ResourceGroupName ${resourcegroupname} -Location ${location}" >> ./ps1/${keyvaultname}.ps1
