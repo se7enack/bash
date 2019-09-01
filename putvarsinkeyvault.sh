@@ -1,5 +1,8 @@
   
 #!/bin/bash
+# This will create a keyvault in Azure and populate it with your key value pairs from a file.
+# Usage: ./putvarsinkeyvault.sh mykeyvaluepairs.properties 
+
 propertiesfile=${1}
 subscriptionid="PUT_YOUR_AZURE_SUBSCRIPTION_ID_HERE"
 location="eastus2"
