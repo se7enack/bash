@@ -8,11 +8,10 @@
 subscriptionid="PUT_YOUR_AZURE_SUBSCRIPTION_ID_HERE"
 location="eastus2"
 instances=( server1 server2 server3 )
-
+#
 mkdir -p ps1
 echo "Set-AzContext -Subscription ${subscriptionid}" > ./ps1/global.ps1
 echo "" >> ./ps1/global.ps1
-
 
 for instance in "${instances[@]}"
 do
