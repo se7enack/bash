@@ -7,11 +7,14 @@ echo;echo "CIDR                    SUBNET                 WILDCARD              
 for i in {32..08}
 do
   if [[ $i -ge 24 ]]; then
-  	class="C"
+        class="C"
+        c=1
   elif [[ $i -ge 16 ]]; then
-  	class="B"
+        class="B"
+        c=3
   else
-  	class="A"
+        class="A"
+        c=2
   fi
   cidr=$(printf %02d $i)
   s=$(( 0xffffffff ^ ((1 << (32-$i)) -1) ))
@@ -20,9 +23,9 @@ do
   math=$(echo $sn  | sed 's/\.0//' | sed 's/\.0//'  | sed 's/\.0//' | awk -F '.' '{print $(NF)}')
   inc=$((256-$math))
   line='                     '
-  printf "%s %s %s %s %s %s\n" "/$cidr" "${line:${#cidr}} $sn ${line:${#sn}} $wc ${line:${#wc}} $x ${line:${#x}} $inc ${line:${#inc}} $class ${line:${#class}}"
+  tput setaf $c;printf "%s %s %s %s %s %s\n" "/$cidr" "${line:${#cidr}} $sn ${line:${#sn}} $wc ${line:${#wc}} $x ${line:${#x}} $inc ${line:${#inc}} $class ${line:${#class}}"
   x=$((x*2))
   z=$(())
-done | sort 
+done | sort
 echo
 
