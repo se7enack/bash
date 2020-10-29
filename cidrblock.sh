@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Stephen Burke - 10/28/2020 - https://github.com/se7enack
-
+clear
 x=1
 echo;echo "CIDR                    SUBNET                 WILDCARD               BLOCK                 INCREMENT              CLASS";echo
 for i in {32..08}
@@ -22,5 +22,7 @@ do
   line='                     '
   printf "%s %s %s %s %s %s\n" "/$cidr" "${line:${#cidr}} $sn ${line:${#sn}} $wc ${line:${#wc}} $x ${line:${#x}} $inc ${line:${#inc}} $class ${line:${#class}}"
   x=$((x*2))
+  z=$(())
 done | sort 
 echo
+
