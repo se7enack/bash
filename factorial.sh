@@ -18,7 +18,6 @@ else
 	COUNT=$(( $1+1 ))
 fi
 
-
 while [ $COUNTER -lt $COUNT ]; do
 	factorials $COUNTER
 	let COUNTER=COUNTER+1 
