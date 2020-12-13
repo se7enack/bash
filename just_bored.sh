@@ -1,4 +1,4 @@
-!/bin/bash
+#!/bin/bash
 
 #RE: https://q4interview.com/aptitude-ques-ans-discussion.php?qid=4416&t=70&qnum=346&cat=29
 
@@ -27,4 +27,4 @@ fun() {
 }
 
 fun
-  
+     
