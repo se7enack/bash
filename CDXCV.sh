@@ -13,18 +13,18 @@ fi
 echo "____________________"
 
 magic(){
-    #sleep 1
+    sleep 1
     var=$(echo $varname | sed -e 's/\(.\)/\1 /g')
     rm -f .num
     set $(echo ${var})
     for item in "$@"; do
         echo "$item " >> .num
     done
-    # rpdcheck=$(cat .num | uniq | tr '\n' ' ' | sed 's/ //g')
-    # if [[ ${#rpdcheck} < 2 ]]; then
-    #     echo "Sorry, no repeating digits allowed. Try again."
-    #     exit
-    # fi
+    rpdcheck=$(cat .num | uniq | tr '\n' ' ' | sed 's/ //g')
+    if [[ ${#rpdcheck} < 2 ]]; then
+        echo "Sorry, no repeating digits allowed. Try again."
+        exit
+    fi
     num=$(cat .num | tr '\n' ' ' | sed 's/ //g')
     min=$(cat .num | sort | tr '\n' ' ' | sed 's/ //g')
     max=$(cat .num | sort | tr '\n' ' ' | rev | sed 's/ //g')
