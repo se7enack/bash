@@ -1,7 +1,11 @@
 #!/usr/bin/env zsh
 
-echo "Enter a four digit number (just no numbers with repeating digits): "
-read varname
+if ! [ -z ${1+x} ]; then
+    varname=${1}
+else
+    echo "Enter a four digit number (just no numbers with repeating digits): "
+    read varname
+fi
 if  ! [[ ${#varname} == 4 ]] || ! [[ ${varname} =~ ^[0-9]+$ ]]; then
     echo "Sorry, "$varname" is not a four digit number. Try again."
     exit
