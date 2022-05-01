@@ -10,7 +10,7 @@ if  ! [[ ${#varname} == 3 ]] || ! [[ ${varname} =~ ^[0-9]+$ ]]; then
     echo "Sorry, "$varname" is not a 3 digit number. Try again."
     exit
 fi
-echo "____________________"
+echo "___________________"
 
 magic(){
     sleep 1
@@ -31,7 +31,7 @@ magic(){
     varname=$(($max-$min))
     echo $num
     echo "$max - $min = $varname"
-    echo "____________________"
+    echo "___________________"
     if [[ $varname == 495 ]]; then
         echo "------> 495 <------"
         echo "Kaprekar's Constant";echo
