@@ -29,7 +29,8 @@ magic(){
     echo "$max - $min = $varname"
     echo "____________________"
     if [[ $varname == 6174 ]]; then
-        echo "--> 6174 <--";echo
+        echo "------> 6174 <------";echo
+        echo "Kaprekar's Constant!"
         exit
     else
     magic  
