@@ -12,14 +12,14 @@ select option in "${options[@]}"; do
             echo "Write message to encoded: "
             read msg
             echo "${option}ing...";echo
-            echo ${msg} | openssl aes-256-cbc -a -salt -pass pass:${key};echo
+            echo ${msg} | base64 | openssl aes-256-cbc -a -salt -pass pass:${key}| base64;echo
             exit
             ;;
         "Decrypt")
             echo "Paste in message to decode: "
             read msg
             echo "${option}ing...";echo
-            echo ${msg} | openssl aes-256-cbc -d -a -pass pass:${key};echo
+            echo ${msg} | base64 -D | openssl aes-256-cbc -d -a -pass pass:${key} | base64 -D ;echo
             exit      
             ;;
 	"Quit")
