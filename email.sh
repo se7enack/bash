@@ -19,7 +19,13 @@ select option in "${options[@]}"; do
             echo "Paste in message to decode: "
             read msg
             echo "${option}ing...";echo
-            echo ${msg} | base64 -D | openssl aes-256-cbc -d -a -pass pass:${key} | base64 -D ;echo
+            solve=$(echo ${msg} | base64 -D 2> /dev/null | openssl aes-256-cbc -d -a -pass pass:${key} 2> /dev/null)
+            if [ $? == 0 ]; then
+                echo ${solve} | base64 -D
+            else
+                echo "Incorrect encryption key provided. Please try again."
+            fi
+            echo
             exit      
             ;;
 	"Quit")
