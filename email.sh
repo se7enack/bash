@@ -12,14 +12,34 @@ select option in "${options[@]}"; do
             echo "Write message to encoded: "
             read -e msg
             echo "${option}ing...";echo
-            echo ${msg} | base64 | openssl aes-256-cbc -a -salt -pass pass:${key}| base64;echo
+            x=$(echo ${msg} | base64 | openssl aes-256-cbc -a -salt -pass pass:${key}| base64)
+            findeq="${x//[^\=]}"
+            if [ -z "$findeq" ]; then
+                numeq=0
+                echo "${x}${numeq}"
+            else
+                numeq=$(echo "${#findeq}")
+                echo $x | sed "s|$findeq|$numeq|g"
+            fi
+            echo
             exit
             ;;
         "Decrypt")
             echo "Paste in message to decode: "
             read -e msg
             echo "${option}ing...";echo
-            solve=$(echo ${msg} | base64 -D 2> /dev/null | openssl aes-256-cbc -d -a -pass pass:${key} 2> /dev/null)
+            numeq=${msg: -1}
+            base=$(echo -n ${msg} | rev | cut -c2- | rev)
+            if [ $? == 0 ]; then
+                echo -n ${solve} | base64 -D
+                while [ $numeq -gt 0 ]; do
+                        base="${base}="
+                        let numeq=numeq-1
+                done
+            else
+                echo "Incorrect encryption key provided. Please try again."
+            fi
+            solve=$(echo ${base} | base64 -D 2> /dev/null | openssl aes-256-cbc -d -a -pass pass:${key} 2> /dev/null)
             if [ $? == 0 ]; then
                 echo ${solve} | base64 -D
             else
