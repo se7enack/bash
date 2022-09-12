@@ -16,20 +16,25 @@ select option in "${options[@]}"; do
             findeq="${x//[^\=]}"
             if [ -z "$findeq" ]; then
                 numeq=0
-                echo "${x}${numeq}"
+                echo "${x}${numeq}" | rev
             else
                 numeq=$(echo "${#findeq}")
-                echo $x | sed "s|$findeq|$numeq|g"
+                echo $x | sed "s|$findeq|$numeq|g" | rev
             fi
             echo
             exit
             ;;
         "Decrypt")
             echo "Paste in message to decode: "
-            read -e msg
+            read -e gsm
+            msg=$(echo $gsm | rev)
             echo "${option}ing...";echo
             numeq=${msg: -1}
             base=$(echo -n ${msg} | rev | cut -c2- | rev)
+            while [  $numeq -gt 0 ]; do
+                base="${base}="
+                let numeq=numeq-1 
+            done
             solve=$(echo ${base} | base64 -D 2> /dev/null | openssl aes-256-cbc -d -a -pass pass:${key} 2> /dev/null)
             if [ $? == 0 ]; then
                 echo ${solve} | base64 -D
