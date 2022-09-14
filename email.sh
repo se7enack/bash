@@ -1,9 +1,19 @@
 #!/usr/bin/env bash
 
+encryption="aes-256-cbc"
+
+key() {
+    if [ -z "$key" ]; then
+        read -e -s key
+        key
+    fi
+}
+
 clear
 echo;echo -n "Enter your personal encryption key: "
-read -e -s key
-clear
+key
+echo "$key" | sed 's/./*/g';echo
+
 PS3='Choose a valid option number: '
 options=("Encrypt" "Decrypt" "Quit")
 select option in "${options[@]}"; do
@@ -12,7 +22,7 @@ select option in "${options[@]}"; do
             echo "Write message to encoded: "
             read -e msg
             echo "${option}ing...";echo
-            x=$(echo ${msg} | base64 | openssl aes-256-cbc -a -salt -pass pass:${key}| base64)
+            x=$(echo ${msg} | base64 | openssl ${encryption} -a -salt -pass pass:${key}| base64)
             findeq="${x//[^\=]}"
             if [ -z "$findeq" ]; then
                 numeq=0
