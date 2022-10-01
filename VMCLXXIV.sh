@@ -28,7 +28,7 @@ magic(){
     num=$(cat .num | tr '\n' ' ' | sed 's/ //g')
     min=$(cat .num | sort | tr '\n' ' ' | sed 's/ //g')
     max=$(cat .num | sort | tr '\n' ' ' | rev | sed 's/ //g')
-    varname=$(($max-$min))
+    varname=$(($max - 10#$min))
     echo $num
     echo "$max - $min = $varname"
     echo "____________________"
