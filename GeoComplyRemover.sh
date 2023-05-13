@@ -10,18 +10,18 @@ if [ "$EUID" -ne 0 ]; then
   exit
 fi
 
-onecount=$(ps -aef | grep PlayerLocationCheck |wc -l)
-twocount=$(ps -aef | grep GeoComply |wc -l)
-if [ $onecount -gt 1 ]; then
-  one=$(ps -aef | grep PlayerLocationCheck | head -1 | awk '{print $2}')
+plc=$(ps -aef | grep PlayerLocationCheck |wc -l)
+gc=$(ps -aef | grep GeoComply |wc -l)
+if [ $plc -gt 1 ]; then
+  plcPid=$(ps -aef | grep PlayerLocationCheck | head -1 | awk '{print $2}')
 fi
-if [ $twocount -gt 1 ]; then
-  two=$(ps -aef | grep GeoComply | head -1 | awk '{print $2}')
+if [ $gc -gt 1 ]; then
+  gcPid=$(ps -aef | grep GeoComply | head -1 | awk '{print $2}')
 fi
 
-if [ $onecount -gt 1 ] || [ $twocount -gt 1 ]; then
+if [ $plc -gt 1 ] || [ $gc -gt 1 ]; then
   mkdir -p /tmp/GeoComply
-  kill ${one} ${two}&&\
+  kill -9 ${plcPid} ${gcPid}&&\
   mv /Library/Application\ Support/GeoComply /tmp/GeoComply/.&&\
   mv /Applications/PlayerLocationCheck.app /tmp/GeoComply/.&&\
   rm -rf /tmp/GeoComply
