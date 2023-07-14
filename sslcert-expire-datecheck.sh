@@ -5,8 +5,11 @@ if [ "$EUID" -ne 0 ]
   exit
 fi
 
-echo "curl --insecure -vvI https://${1} 2>&1 | awk 'BEGIN { cert=0 } /^\* SSL connection/ { cert=1 } /^\*/ { if (cert) print }' | grep expire|awk -F \":\" '{print $2 \"\" $4}' | awk '{print $1,$2,$4}'" >/usr/local/bin/expires
+echo "curl --insecure -vvI https://\${1} 2>&1 | awk 'BEGIN { cert=0 } /^\\* SSL connection/ { cert=1 } /^\\*/ { if (cert) print }' | grep expire|awk -F \":\" '{print \$2 \"\" \$4}' | awk '{print \$1,\$2,\$4}'" >/usr/local/bin/expires
+chmod +x /usr/local/bin/expires
 
-echo;echo "Installed!"
-echo "  Usage:  'expires github.com'"
-echo "  Result: 'Mar 14 2024'";echo
+echo;echo "Installed!";echo 
+echo "Usage:  'expires github.com'";echo
+expires github.com
+echo
+ 
