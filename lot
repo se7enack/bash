@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+
+jp="${1}.0"
+co=$(echo "$jp 0.4832" | awk '{print $1 - $1 * $2}')
+echo "Cash Option: $co"
+taxes=$(echo "$co 0.37" | awk '{print $1 * $2}')
+po=$(echo "$co $taxes" | awk '{print $1 - $2}')
+echo "Take Home: $po"
+ 
